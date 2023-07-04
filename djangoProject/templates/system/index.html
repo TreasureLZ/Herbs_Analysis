@@ -1,0 +1,35 @@
+{% extends "base.html" %}{% load static %}
+{% block title %}首页{% endblock %}
+{% block style %}
+    <style>
+        .index {
+            padding-top: 250px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .index a {
+            margin: auto;
+        }
+
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="index">
+        <a href="{% url 'system:chart1' %}">
+            <button type="button" class="btn btn-primary">&nbsp;&nbsp;&nbsp;药材Top20&nbsp;&nbsp;&nbsp;</button>
+        </a>
+        <a href="{% url 'system:chart2' %}">
+            <button type="button" class="btn btn-success">&nbsp;&nbsp;&nbsp;药材价格&nbsp;&nbsp;&nbsp;</button>
+        </a>
+        <a href="{% url 'system:chart3' %}">
+            <button type="button" class="btn btn-info">&nbsp;&nbsp;&nbsp;药材产地占比&nbsp;&nbsp;&nbsp;</button>
+        </a>
+        <a href="{% url 'system:chart4' %}">
+            <button type="button" class="btn btn-warning">&nbsp;&nbsp;&nbsp;历史价格&nbsp;&nbsp;&nbsp;</button>
+        </a>
+        <a href="{% url 'system:chart5' %}">
+            <button type="button" class="btn btn-danger">&nbsp;&nbsp;&nbsp;新闻资讯&nbsp;&nbsp;&nbsp;</button>
+        </a>
+    </div>
+{% endblock %}

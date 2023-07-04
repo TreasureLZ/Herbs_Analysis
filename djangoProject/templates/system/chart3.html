@@ -1,0 +1,68 @@
+{% extends "base.html" %}{% load static %}
+{% block title %}药材产地占比{% endblock %}
+{% block style %}
+    <style>
+        .index {
+            padding-top: 200px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .index a {
+            margin: auto;
+        }
+
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="container" style="padding-top: 100px; padding-left: 20px">
+        <form action="{% url 'system:chart3' %}" method="POST">
+            <label>请输入查询药材：</label>
+            <input type="text" name="keyword" required>
+            <button type="submit" class="btn btn-success" style="margin-left: 50px;">提交</button>
+        </form>
+        {% if info.error %}
+            <span style="color: red">不存在该种药材的数据记录！</span>
+        {% elif info.data %}
+            <br><br>
+            <div id="chart" style="height: 700px"></div>
+            <br><br>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        var data =
+        {{ info.data|safe }}
+        var Chart = echarts.init(document.getElementById('chart'));
+        var option = {
+            title: {
+                text: '药材产地占比',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left'
+            },
+            series: [
+                {
+                    name: '次数',
+                    type: 'pie',
+                    radius: '50%',
+                    data: data,
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+        Chart.setOption(option);
+    </script>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}{% load static %}
+{% block title %}历史价格{% endblock %}
+{% block style %}
+    <style>
+        .index {
+            padding-top: 200px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .index a {
+            margin: auto;
+        }
+
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="container" style="padding-top: 100px; padding-left: 20px">
+        <form action="{% url 'system:chart4' %}" method="POST">
+            <label>请输入查询药材：</label>
+            <input type="text" name="keyword" required>
+            <button type="submit" class="btn btn-success" style="margin-left: 50px;">提交</button>
+        </form>
+        {% if info.error %}
+            <span style="color: red">不存在该种药材的数据记录！</span>
+        {% elif info.data %}
+            <br><br>
+            <div id="chart" style="height: 700px"></div>
+            <br><br>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+        var data =
+        {{ info.data|safe }}
+        var Chart = echarts.init(document.getElementById('chart'));
+        var option = {
+            title: {
+                text: '历史价格'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {},
+            toolbox: {
+                show: true,
+                feature: {
+                    dataZoom: {
+                        yAxisIndex: 'none'
+                    },
+                    dataView: {readOnly: false},
+                    magicType: {type: ['line', 'bar']},
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: data.x_data
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: '{value} ¥'
+                }
+            },
+            series: [
+                {
+                    name: '价格',
+                    type: 'line',
+                    color: 'green',
+                    data: data.y_data,
+                    markPoint: {
+                        data: [
+                            {type: 'max', name: 'Max'},
+                            {type: 'min', name: 'Min'}
+                        ]
+                    },
+                    markLine: {
+                        data: [{type: 'average', name: 'Avg'}]
+                    }
+                },
+
+            ]
+        };
+        Chart.setOption(option);
+    </script>
+{% endblock %}
